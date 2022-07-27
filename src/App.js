@@ -2,6 +2,22 @@ import React, { Component } from 'react';
 import "./App.css";
 
 export default class App extends Component {
+
+  state = {
+    todoData : [
+      {
+        id: "1",
+        title: "Recat 공부하기",
+        completed: true
+      },
+      {
+        id: "2",
+        title: "면접 준비하기",
+        completed: false
+      }
+    ]
+  }
+
   btnstyle = {
     color: "#fff",
     border: "none",
@@ -19,7 +35,12 @@ export default class App extends Component {
     }
   }
 
-  render() {
+  handleClick = (id) => {
+    let newTodoData = this.state.todoData.filter((data) => data.id !== id);
+    this.setState({ todoData: newTodoData });
+  };
+
+  render() {  
     return (
       <div className="container">
         <div className="todoBlock">
@@ -27,12 +48,15 @@ export default class App extends Component {
             <h1>할 일 목록</h1>
           </div>
 
-          <div style={this.getStyle()}>
-            <input type="checkbox" defaultChecked={false}>
-            </input>
-            React 공부하기
-            <button style={this.btnstyle}>x</button>
-          </div>
+      {this.state.todoData.map((data) => 
+        <div style={this.getStyle()} key={data.id}>
+        <input type="checkbox" defaultChecked={false}>
+        </input>
+          {data.title}
+        <button style={this.btnstyle} onClick={() => this.handleClick(data.id)}>x</button>
+        </div>
+      )}
+
         </div>
       </div>
     )
