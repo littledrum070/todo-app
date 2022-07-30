@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function list( {todoData, setTodoData} ) {
+export default function List( {todoData, setTodoData} ) {
 
     const btnstyle = {
         color: "#fff",
