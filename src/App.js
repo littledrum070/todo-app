@@ -1,25 +1,12 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import "./App.css";
 
-export default class App extends Component {
+export default function App()
+{
+  const [todoData, setTodoData] = useState([])
+  const [value, setValue] = useState("")
 
-  state = {
-    todoData : [
-      {
-        id: "1",
-        title: "Recat 공부하기",
-        completed: false
-      },
-      {
-        id: "2",
-        title: "면접 준비하기",
-        completed: false
-      }
-    ],
-    value: ""
-  }
-
-  btnstyle = {
+  const btnstyle = {
     color: "#fff",
     border: "none",
     padding: "5px 9px",
@@ -28,36 +15,48 @@ export default class App extends Component {
     float: "right"
   }
 
-  getStyle = (completed) => {
+  const listStyle = (completed) => {
     return {
       padding: "10px",
       borderBottom: "1px #ccc dotted",
-      TextDecoration: completed ? "line-through" : "none"
+      textDecoration: completed ? "line-through" : "none"
     }
   }
 
-  handleClick = (id) => {
-    let newTodoData = this.state.todoData.filter((data) => data.id !== id)
-    this.setState({ todoData: newTodoData })
+  const handleClick = (id) => {
+    let newTodoData = todoData.filter((data) => data.id !== id)
+    setTodoData(newTodoData)
   }
 
-  handleChange = (e) => {
-    this.setState({ value: e.target.value })
+  const handleChange = (e) => {
+    setValue(e.target.value)
   }
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
     let newTodo = {
       id: Date.now(),
-      title: this.state.value,
+      title: value,
       completed: false
     }
 
-    this.setState({ todoData: [...this.state.todoData, newTodo]})
+    setTodoData(prev => [...prev, newTodo])
+    setValue("")
   }
 
-  render() {  
+  const handleCompleteChange = (id) => {
+    let newTodoData = todoData.map((data) => {
+      if (data.id === id) {
+        data.completed = !data.completed
+      }
+      return data
+    })
+    setTodoData(newTodoData)
+  }
+
+
+  
     return (
       <div className="container">
         <div className="todoBlock">
@@ -65,23 +64,31 @@ export default class App extends Component {
             <h1>할 일 목록</h1>
           </div>
 
-      {this.state.todoData.map((data) => 
-        <div style={this.getStyle(data.completed)} key={data.id}>
-        <input type="checkbox" defaultChecked={false}>
-        </input>
+      {todoData.map((data) => 
+        <div style={listStyle(data.completed)} key={data.id}>
+          <input
+            type="checkbox"
+            defaultChecked={false}
+            onChange={() => handleCompleteChange(data.id)}
+          />
           {data.title}
-        <button style={this.btnstyle} onClick={() => this.handleClick(data.id)}>x</button>
+          <button
+            style={btnstyle}
+            onClick={() => handleClick(data.id)}
+          >
+            x
+          </button>
         </div>
       )}
 
-        <form style={{display: 'flex'}} onSubmit={this.handleSubmit}>
+        <form style={{display: 'flex'}} onSubmit={handleSubmit}>
           <input
             type="text"
             name="value"
             style={{flex: '10', padding: '5px'}}
             placeholder="해야할 일을 입력하세요"
-            value={this.state.value}
-            onChange={this.handleChange}
+            value={value}
+            onChange={handleChange}
           />
           <input
             type="submit"
@@ -95,5 +102,4 @@ export default class App extends Component {
         </div>
       </div>
     )
-  }
 }
