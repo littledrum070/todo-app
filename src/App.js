@@ -7,12 +7,12 @@ export default function App()
   const [todoData, setTodoData] = useState([])
   const [value, setValue] = useState("")
 
-  const handleChange = (event) => {
-    setValue(event.target.value)
+  const handleChange = (e) => {
+    setValue(e.target.value)
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
     let newTodo = {
       id: Date.now(),
